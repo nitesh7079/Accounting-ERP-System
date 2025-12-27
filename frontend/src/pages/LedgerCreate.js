@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import Navbar from '../components/Navbar';
 
 const LedgerCreate = () => {
@@ -22,26 +23,40 @@ const LedgerCreate = () => {
 
   useEffect(() => {
     fetchGroups();
-  }, []);
+  }, [user]);
 
   const fetchGroups = async () => {
     try {
+      setLoading(true);
       console.log('User:', user);
-      if (user?.company?._id) {
-        console.log('Fetching groups for company:', user.company._id);
-        const response = await api.get(`/groups?company=${user.company._id}`);
+      const companyId = getSelectedCompanyId(user);
+      if (companyId) {
+        console.log('Fetching groups for company:', companyId);
+        const response = await api.get(`/groups?company=${companyId}`);
         console.log('Groups response:', response.data);
-        setGroups(response.data.data);
+        const groupData = response.data.data || [];
+        setGroups(groupData);
+        
+        if (groupData.length === 0) {
+          setError('No groups found for this company. Please create groups first.');
+        }
       } else {
         // If no company assigned, fetch all groups
         console.log('No company found, fetching all groups');
         const response = await api.get('/groups');
         console.log('All groups response:', response.data);
-        setGroups(response.data.data || []);
+        const groupData = response.data.data || [];
+        setGroups(groupData);
+        
+        if (groupData.length === 0) {
+          setError('No groups found. Please select a company and create groups first.');
+        }
       }
     } catch (error) {
       console.error('Error fetching groups:', error);
-      setError('Failed to load groups');
+      setError('Failed to load groups. ' + (error.response?.data?.message || error.message));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -55,10 +70,24 @@ const LedgerCreate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.group) {
+      setError('Please select a group');
+      return;
+    }
+    
     setError('');
     setLoading(true);
 
     try {
+      const companyId = getSelectedCompanyId(user);
+      
+      if (!companyId) {
+        setError('Please select a company first');
+        setLoading(false);
+        return;
+      }
+      
       const ledgerData = {
         name: formData.name,
         alias: formData.alias,
@@ -73,7 +102,7 @@ const LedgerCreate = () => {
           type: formData.openingBalanceType
         },
         description: formData.description,
-        company: user.company._id
+        company: companyId
       };
 
       await api.post('/ledgers', ledgerData);
@@ -130,12 +159,20 @@ const LedgerCreate = () => {
                 onChange={handleChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
                 required
+                disabled={loading || groups.length === 0}
               >
-                <option value="">Select Group</option>
+                <option value="">
+                  {groups.length === 0 ? 'No groups available' : 'Select Group'}
+                </option>
                 {groups.map(group => (
                   <option key={group._id} value={group._id}>{group.name}</option>
                 ))}
               </select>
+              {groups.length === 0 && (
+                <p className="text-sm text-red-600 mt-1">
+                  No groups found. Please ensure a company is selected and groups exist.
+                </p>
+              )}
             </div>
 
             <div className="mb-4">

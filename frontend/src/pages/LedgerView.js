@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import api from '../utils/api';
 import Navbar from '../components/Navbar';
 import { exportLedgerDetailsToPDF, exportLedgerDetailsToExcel } from '../utils/exportUtils';
@@ -20,9 +21,10 @@ const LedgerView = () => {
 
   const fetchLedger = async () => {
     try {
+      const companyId = getSelectedCompanyId(user);
       const [ledgerRes, vouchersRes] = await Promise.all([
         api.get(`/ledgers/${id}`),
-        api.get(`/vouchers?company=${user?.company?._id}`)
+        api.get(`/vouchers?company=${companyId}`)
       ]);
       
       const ledgerData = ledgerRes.data.data;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import api from '../utils/api';
 import Navbar from '../components/Navbar';
 import { exportToPDF, exportToExcel } from '../utils/exportUtils';
@@ -15,7 +16,8 @@ const StockSummary = () => {
 
   const fetchStockSummary = async () => {
     try {
-      const response = await api.get(`/inventory?company=${user.company._id}`);
+      const companyId = getSelectedCompanyId(user);
+      const response = await api.get(`/inventory?company=${companyId}`);
       setItems(response.data.data || []);
     } catch (error) {
       console.error('Error fetching stock summary:', error);

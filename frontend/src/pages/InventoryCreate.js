@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import Navbar from '../components/Navbar';
 
 const InventoryCreate = () => {
@@ -58,7 +59,7 @@ const InventoryCreate = () => {
         },
         reorderLevel: parseFloat(formData.reorderLevel) || 0,
         description: formData.description,
-        company: user.company._id
+        company: getSelectedCompanyId(user)
       };
 
       await api.post('/inventory', itemData);

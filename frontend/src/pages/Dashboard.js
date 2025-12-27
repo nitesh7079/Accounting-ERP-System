@@ -13,6 +13,7 @@ import {
 } from 'chart.js';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import Navbar from '../components/Navbar';
 
 ChartJS.register(
@@ -37,8 +38,9 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      if (user?.company?._id) {
-        const response = await api.get(`/reports/dashboard?company=${user.company._id}`);
+      const companyId = getSelectedCompanyId(user);
+      if (companyId) {
+        const response = await api.get(`/reports/dashboard?company=${companyId}`);
         setDashboardData(response.data.data);
       }
     } catch (error) {

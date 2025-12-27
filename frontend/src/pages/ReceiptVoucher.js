@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import Navbar from '../components/Navbar';
 
 const ReceiptVoucher = () => {
@@ -28,8 +29,9 @@ const ReceiptVoucher = () => {
 
   const fetchLedgers = async () => {
     try {
-      const response = user?.company?._id 
-        ? await api.get(`/ledgers?company=${user.company._id}`)
+      const companyId = getSelectedCompanyId(user);
+      const response = companyId 
+        ? await api.get(`/ledgers?company=${companyId}`)
         : await api.get('/ledgers');
       setLedgers(response.data.data || []);
     } catch (error) {
@@ -95,13 +97,14 @@ const ReceiptVoucher = () => {
     setLoading(true);
 
     try {
+      const companyId = getSelectedCompanyId(user);
       const totalAmount = calculateTotal();
       const voucherData = {
         voucherNumber: formData.voucherNumber,
         voucherType: 'Receipt',
         date: formData.date,
         narration: formData.narration,
-        company: user.company._id,
+        company: companyId,
         totalAmount: totalAmount,
         entries: [
           { ledger: formData.account, type: 'Dr', amount: totalAmount },

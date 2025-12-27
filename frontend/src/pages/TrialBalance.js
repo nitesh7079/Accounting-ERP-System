@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import Navbar from '../components/Navbar';
 import { exportToPDF, exportToExcel } from '../utils/exportUtils';
 
@@ -15,8 +16,9 @@ const TrialBalance = () => {
 
   const fetchReport = async () => {
     try {
-      if (user?.company?._id) {
-        const response = await api.get(`/reports/trial-balance?company=${user.company._id}`);
+      const companyId = getSelectedCompanyId(user);
+      if (companyId) {
+        const response = await api.get(`/reports/trial-balance?company=${companyId}`);
         setData(response.data.data);
       }
     } catch (error) {

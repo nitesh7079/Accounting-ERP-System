@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import Navbar from '../components/Navbar';
 
 const VoucherList = () => {
@@ -18,8 +19,9 @@ const VoucherList = () => {
 
   const fetchVouchers = async () => {
     try {
-      if (user?.company?._id) {
-        let url = `/vouchers?company=${user.company._id}`;
+      const companyId = getSelectedCompanyId(user);
+      if (companyId) {
+        let url = `/vouchers?company=${companyId}`;
         if (voucherType) url += `&voucherType=${voucherType}`;
         if (startDate) url += `&startDate=${startDate}`;
         if (endDate) url += `&endDate=${endDate}`;

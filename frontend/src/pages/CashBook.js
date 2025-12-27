@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import api from '../utils/api';
 import Navbar from '../components/Navbar';
 import { exportLedgerDetailsToPDF, exportLedgerDetailsToExcel } from '../utils/exportUtils';
@@ -18,7 +19,8 @@ const CashBook = () => {
 
   const fetchCashBook = async () => {
     try {
-      let url = `/vouchers?company=${user.company._id}`;
+      const companyId = getSelectedCompanyId(user);
+      let url = `/vouchers?company=${companyId}`;
       if (startDate) url += `&startDate=${startDate}`;
       if (endDate) url += `&endDate=${endDate}`;
       

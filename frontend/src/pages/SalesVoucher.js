@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import Navbar from '../components/Navbar';
 
 const SalesVoucher = () => {
@@ -32,12 +33,13 @@ const SalesVoucher = () => {
 
   const fetchData = async () => {
     try {
+      const companyId = getSelectedCompanyId(user);
       const [ledgersRes, itemsRes] = await Promise.all([
-        user?.company?._id 
-          ? api.get(`/ledgers?company=${user.company._id}`)
+        companyId 
+          ? api.get(`/ledgers?company=${companyId}`)
           : api.get('/ledgers'),
-        user?.company?._id 
-          ? api.get(`/inventory?company=${user.company._id}`)
+        companyId 
+          ? api.get(`/inventory?company=${companyId}`)
           : api.get('/inventory')
       ]);
       
@@ -135,6 +137,7 @@ const SalesVoucher = () => {
     setLoading(true);
 
     try {
+      const companyId = getSelectedCompanyId(user);
       const totalAmount = calculateTotal();
 
       const voucherData = {
@@ -143,7 +146,7 @@ const SalesVoucher = () => {
         date: formData.date,
         party: formData.partyAccount,
         narration: formData.narration,
-        company: user.company._id,
+        company: companyId,
         totalAmount: totalAmount,
         entries: [
           {

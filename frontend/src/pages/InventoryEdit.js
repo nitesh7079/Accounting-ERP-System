@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import Navbar from '../components/Navbar';
 
 const InventoryEdit = () => {
@@ -87,7 +88,7 @@ const InventoryEdit = () => {
         reorderLevel: parseFloat(formData.reorderLevel) || 0,
         valuationMethod: formData.valuationMethod,
         description: formData.description,
-        company: user.company._id
+        company: getSelectedCompanyId(user)
       };
 
       await api.put(`/inventory/${id}`, itemData);

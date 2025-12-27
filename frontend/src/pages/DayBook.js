@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import api from '../utils/api';
 import Navbar from '../components/Navbar';
 import { exportToPDF, exportToExcel } from '../utils/exportUtils';
@@ -16,7 +17,8 @@ const DayBook = () => {
 
   const fetchDayBook = async () => {
     try {
-      const url = `/vouchers?company=${user.company._id}&startDate=${selectedDate}&endDate=${selectedDate}`;
+      const companyId = getSelectedCompanyId(user);
+      const url = `/vouchers?company=${companyId}&startDate=${selectedDate}&endDate=${selectedDate}`;
       const response = await api.get(url);
       setVouchers(response.data.data || []);
     } catch (error) {

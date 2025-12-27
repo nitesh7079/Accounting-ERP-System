@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import api from '../utils/api';
 import Navbar from '../components/Navbar';
 import { exportToPDF, exportToExcel } from '../utils/exportUtils';
@@ -18,9 +19,10 @@ const ProfitLoss = () => {
 
   const fetchData = async () => {
     try {
+      const companyId = getSelectedCompanyId(user);
       const [ledgersRes, vouchersRes] = await Promise.all([
-        api.get(`/ledgers?company=${user.company._id}`),
-        api.get(`/vouchers?company=${user.company._id}${startDate ? `&startDate=${startDate}` : ''}${endDate ? `&endDate=${endDate}` : ''}`)
+        api.get(`/ledgers?company=${companyId}`),
+        api.get(`/vouchers?company=${companyId}${startDate ? `&startDate=${startDate}` : ''}${endDate ? `&endDate=${endDate}` : ''}`)
       ]);
       
       setLedgers(ledgersRes.data.data || []);

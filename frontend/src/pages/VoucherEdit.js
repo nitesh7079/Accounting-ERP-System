@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import api from '../utils/api';
 import Navbar from '../components/Navbar';
 
@@ -50,8 +51,9 @@ const VoucherEdit = () => {
 
   const fetchLedgers = async () => {
     try {
-      if (user?.company?._id) {
-        const response = await api.get(`/ledgers?company=${user.company._id}`);
+      const companyId = getSelectedCompanyId(user);
+      if (companyId) {
+        const response = await api.get(`/ledgers?company=${companyId}`);
         setLedgers(response.data.data);
       }
     } catch (error) {
@@ -114,9 +116,10 @@ const VoucherEdit = () => {
     }
 
     try {
+      const companyId = getSelectedCompanyId(user);
       await api.put(`/vouchers/${id}`, {
         ...formData,
-        company: user?.company?._id
+        company: companyId
       });
       alert('Voucher updated successfully!');
       navigate('/vouchers');

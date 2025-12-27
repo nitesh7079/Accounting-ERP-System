@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import { getSelectedCompanyId } from '../utils/companyHelper';
 import Navbar from '../components/Navbar';
 
 const LedgerList = () => {
@@ -18,10 +19,11 @@ const LedgerList = () => {
 
   const fetchData = async () => {
     try {
-      if (user?.company?._id) {
+      const companyId = getSelectedCompanyId(user);
+      if (companyId) {
         const [ledgersRes, groupsRes] = await Promise.all([
-          api.get(`/ledgers?company=${user.company._id}`),
-          api.get(`/groups?company=${user.company._id}`)
+          api.get(`/ledgers?company=${companyId}`),
+          api.get(`/groups?company=${companyId}`)
         ]);
 
         setLedgers(ledgersRes.data.data);
