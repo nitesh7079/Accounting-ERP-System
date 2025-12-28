@@ -14,6 +14,7 @@ const BankBook = () => {
   const [selectedBank, setSelectedBank] = useState('');
   const [bankLedgers, setBankLedgers] = useState([]);
   const [openingBalance, setOpeningBalance] = useState(0);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchBankLedgers();
@@ -27,20 +28,27 @@ const BankBook = () => {
 
   const fetchBankLedgers = async () => {
     try {
+      setError('');
       const companyId = getSelectedCompanyId(user);
       const response = await api.get(`/ledgers?company=${companyId}`);
       const banks = response.data.data.filter(l => l.group?.name === 'Bank Accounts');
       setBankLedgers(banks);
       if (banks.length > 0) {
         setSelectedBank(banks[0]._id);
+      } else {
+        setLoading(false);
       }
     } catch (error) {
       console.error('Error fetching bank ledgers:', error);
+      setError('Failed to load bank ledgers. Please try again.');
+      setLoading(false);
     }
   };
 
   const fetchBankBook = async () => {
     try {
+      setError('');
+      setLoading(true);
       const companyId = getSelectedCompanyId(user);
       let url = `/vouchers?company=${companyId}`;
       if (startDate) url += `&startDate=${startDate}`;
@@ -68,6 +76,7 @@ const BankBook = () => {
       setTransactions(bankTransactions);
     } catch (error) {
       console.error('Error fetching bank book:', error);
+      setError('Failed to load bank book data. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -107,6 +116,22 @@ const BankBook = () => {
     );
   }
 
+  if (bankLedgers.length === 0) {
+    return (
+      <div>
+        <Navbar />
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold mb-6">Bank Book</h1>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+            <p className="text-lg text-yellow-800">
+              No bank accounts found. Please create a bank account ledger under the "Bank Accounts" group first.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Navbar />
@@ -122,6 +147,12 @@ const BankBook = () => {
             </button>
           </div>
         </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <p className="text-red-800">{error}</p>
+          </div>
+        )}
 
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <div className="grid grid-cols-4 gap-4">
