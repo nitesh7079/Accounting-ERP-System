@@ -65,38 +65,50 @@ const LedgerList = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-cyan-50">
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Ledgers</h1>
+      <div className="container mx-auto px-6 py-8">
+        <div className="flex justify-between items-center mb-10 animate-fade-in">
+          <div>
+            <h1 className="text-5xl font-bold gradient-text mb-2">Ledgers</h1>
+            <p className="text-gray-600 text-lg">Manage your account ledgers</p>
+          </div>
           <Link
             to="/ledgers/create"
-            className="bg-primary text-white px-6 py-2 rounded hover:bg-blue-700"
+            className="btn-gradient text-white px-8 py-4 rounded-xl hover:shadow-2xl font-bold text-lg shadow-xl flex items-center space-x-2 transform transition-all duration-300"
           >
-            Create Ledger
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Create Ledger</span>
           </Link>
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white p-6 rounded-2xl shadow-xl mb-8 border-t-4 border-cyan-500 animate-fade-in">
+          <div className="flex items-center mb-4">
+            <svg className="w-6 h-6 text-cyan-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            <h3 className="text-xl font-bold text-gray-800">Filter Ledgers</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium mb-2">Search</label>
+              <label className="block text-sm font-bold mb-2 text-gray-800 tracking-wide">Search</label>
               <input
                 type="text"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
                 placeholder="Search ledgers..."
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Filter by Group</label>
+              <label className="block text-sm font-bold mb-2 text-gray-800 tracking-wide">Filter by Group</label>
               <select
                 value={selectedGroup}
                 onChange={(e) => setSelectedGroup(e.target.value)}
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300"
               >
                 <option value="">All Groups</option>
                 {groups.map(group => (
@@ -108,47 +120,51 @@ const LedgerList = () => {
         </div>
 
         {/* Ledgers Table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden animate-fade-in border-t-4 border-green-500">
+          <table className="w-full professional-table">
+            <thead className="bg-gradient-to-r from-blue-600 to-cyan-500">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Group</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Opening Balance</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Balance</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Ledger Name</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Group</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Opening Balance</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Current Balance</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredLedgers.map(ledger => (
-                <tr key={ledger._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">{ledger.name}</td>
-                  <td className="px-6 py-4">{ledger.group.name}</td>
+                <tr key={ledger._id} className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 transition-all duration-200">
+                  <td className="px-6 py-4 font-semibold text-gray-800">{ledger.name}</td>
                   <td className="px-6 py-4">
-                    ₹{ledger.openingBalance.amount} {ledger.openingBalance.type}
+                    <span className="badge-professional bg-blue-100 text-blue-800">{ledger.group.name}</span>
+                  </td>
+                  <td className="px-6 py-4 font-semibold text-gray-700">
+                    ₹{ledger.openingBalance.amount} <span className="text-xs text-gray-500">{ledger.openingBalance.type}</span>
+                  </td>
+                  <td className="px-6 py-4 font-semibold text-gray-700">
+                    ₹{ledger.currentBalance.amount} <span className="text-xs text-gray-500">{ledger.currentBalance.type}</span>
                   </td>
                   <td className="px-6 py-4">
-                    ₹{ledger.currentBalance.amount} {ledger.currentBalance.type}
-                  </td>
-                  <td className="px-6 py-4">
-                    <Link
-                      to={`/ledgers/${ledger._id}`}
-                      className="text-blue-600 hover:underline mr-4"
-                    >
-                      View
-                    </Link>
-                    <Link
-                      to={`/ledgers/edit/${ledger._id}`}
-                      className="text-green-600 hover:underline mr-4"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(ledger._id)}
-                      className="text-red-600 hover:underline"
-                    >
-                      Delete
-                    </button>
+                    <div className="flex space-x-2">
+                      <Link
+                        to={`/ledgers/${ledger._id}`}
+                        className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors font-semibold text-sm"
+                      >
+                        View
+                      </Link>
+                      <Link
+                        to={`/ledgers/edit/${ledger._id}`}
+                        className="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors font-semibold text-sm"
+                      >
+                        Edit
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(ledger._id)}
+                        className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-semibold text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

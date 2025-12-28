@@ -170,6 +170,7 @@ const LedgerView = () => {
 
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <div className="grid grid-cols-2 gap-6">
+            
             <div>
               <label className="block text-sm font-medium text-gray-500 mb-1">Ledger Name</label>
               <div className="text-lg font-semibold">{ledger.name}</div>
@@ -182,6 +183,7 @@ const LedgerView = () => {
               </div>
             )}
 
+            
             <div>
               <label className="block text-sm font-medium text-gray-500 mb-1">Under Group</label>
               <div className="text-lg">{ledger.group?.name || 'N/A'}</div>

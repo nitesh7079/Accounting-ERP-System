@@ -74,49 +74,58 @@ const StockSummary = () => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-cyan-50">
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Stock Summary</h1>
+      <div className="container mx-auto px-6 py-8">
+        <div className="flex justify-between items-center mb-10 animate-fade-in">
+          <div>
+            <h1 className="text-5xl font-bold gradient-text mb-2">Stock Summary</h1>
+            <p className="text-gray-600 text-lg">Current inventory levels and valuation</p>
+          </div>
           <div className="flex gap-3">
-            <button onClick={handleExportPDF} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 flex items-center gap-2">
-              <span>📄</span> PDF
+            <button onClick={handleExportPDF} className="btn-gradient text-white px-6 py-3 rounded-xl hover:shadow-2xl flex items-center gap-2 font-semibold shadow-xl transition-all duration-300">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              PDF
             </button>
-            <button onClick={handleExportExcel} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center gap-2">
-              <span>📊</span> Excel
+            <button onClick={handleExportExcel} className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl hover:shadow-2xl flex items-center gap-2 font-semibold shadow-xl transition-all duration-300">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Excel
             </button>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow mb-6">
+        <div className="bg-white p-6 rounded-2xl shadow-xl mb-8 border-t-4 border-purple-500 animate-fade-in">
           <div className="grid grid-cols-3 gap-6">
-            <div className="bg-blue-50 p-4 rounded">
-              <div className="text-sm text-gray-600 mb-1">Total Items</div>
-              <div className="text-3xl font-bold text-blue-600">{items.length}</div>
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border-l-4 border-blue-500">
+              <div className="text-sm font-bold text-gray-700 mb-1">Total Items</div>
+              <div className="text-4xl font-bold gradient-text">{items.length}</div>
             </div>
-            <div className="bg-green-50 p-4 rounded">
-              <div className="text-sm text-gray-600 mb-1">Total Quantity</div>
-              <div className="text-3xl font-bold text-green-600">{getTotalQuantity().toFixed(2)}</div>
+            <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-l-4 border-green-500">
+              <div className="text-sm font-bold text-gray-700 mb-1">Total Quantity</div>
+              <div className="text-4xl font-bold text-green-600">{getTotalQuantity().toFixed(2)}</div>
             </div>
-            <div className="bg-purple-50 p-4 rounded">
-              <div className="text-sm text-gray-600 mb-1">Total Value</div>
-              <div className="text-3xl font-bold text-purple-600">₹{getTotalValue().toFixed(2)}</div>
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-l-4 border-purple-500">
+              <div className="text-sm font-bold text-gray-700 mb-1">Total Value</div>
+              <div className="text-4xl font-bold text-purple-600">₹{getTotalValue().toFixed(2)}</div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-orange-600 text-white">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden animate-fade-in border-t-4 border-orange-500">
+          <table className="w-full professional-table">
+            <thead className="bg-gradient-to-r from-orange-600 to-orange-500">
               <tr>
-                <th className="px-4 py-3 text-left">Item Code</th>
-                <th className="px-4 py-3 text-left">Item Name</th>
-                <th className="px-4 py-3 text-left">Unit</th>
-                <th className="px-4 py-3 text-right">Quantity</th>
-                <th className="px-4 py-3 text-right">Rate</th>
-                <th className="px-4 py-3 text-right">Value</th>
-                <th className="px-4 py-3 text-center">Status</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Item Code</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Item Name</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Unit</th>
+                <th className="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">Quantity</th>
+                <th className="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">Rate</th>
+                <th className="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">Value</th>
+                <th className="px-6 py-4 text-center text-xs font-bold text-white uppercase tracking-wider">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
